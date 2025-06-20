@@ -1,28 +1,29 @@
 package calculator;
 
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import javax.swing.*;
 
 /**
- * Interface graphique basique pour la calculatrice, avec historique des calculs.
+ * Interface graphique pour la calculatrice,
+ * avec choix de thème (clair/sombre) et de police.
  */
 public class CalculatorUI extends JFrame {
-    // Champs de saisie pour les opérandes
+    // Champs de saisie
     private JTextField fieldA;
     private JTextField fieldB;
-    // Sélection de l'opération
+    // Choix de l'opération
     private JComboBox<String> operationBox;
-    // Bouton pour déclencher le calcul
     private JButton calculateButton;
-    // Label pour afficher le résultat
     private JLabel resultLabel;
-    // Modèle et liste pour l'historique
+    // Historique
     private DefaultListModel<String> historyModel;
     private JList<String> historyList;
+    // Contrôles de thème et de police
+    private JComboBox<String> themeBox;
+    private JComboBox<String> fontBox;
 
-    /**
-     * Constructeur : initialise tous les composants et les place dans la fenêtre.
-     */
     public CalculatorUI() {
         setTitle("Calculatrice");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -31,73 +32,158 @@ public class CalculatorUI extends JFrame {
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // ===== Champ Nombre A =====
+        // ===== Sélection du thème =====
         gbc.gridx = 0;
         gbc.gridy = 0;
+        add(new JLabel("Thème:"), gbc);
+        gbc.gridx = 1;
+        themeBox = new JComboBox<>(new String[]{"Clair", "Sombre"});
+        themeBox.addItemListener(new ThemeListener());
+        add(themeBox, gbc);
+
+        // ===== Sélection de la police =====
+        gbc.gridx = 2;
+        add(new JLabel("Police:"), gbc);
+        gbc.gridx = 3;
+        fontBox = new JComboBox<>(new String[]{"SansSerif", "Serif", "Monospaced"});
+        fontBox.addItemListener(new FontListener());
+        add(fontBox, gbc);
+
+        // ===== Champ Nombre A =====
+        gbc.gridx = 0;
+        gbc.gridy = 1;
         add(new JLabel("Nombre A:"), gbc);
         gbc.gridx = 1;
+        gbc.gridwidth = 3;
         fieldA = new JTextField(10);
         add(fieldA, gbc);
 
         // ===== Champ Nombre B =====
         gbc.gridx = 0;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
+        gbc.gridwidth = 1;
         add(new JLabel("Nombre B:"), gbc);
         gbc.gridx = 1;
+        gbc.gridwidth = 3;
         fieldB = new JTextField(10);
         add(fieldB, gbc);
 
-        // ===== Sélection de l'opération =====
+        // ===== Opération =====
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 3;
+        gbc.gridwidth = 1;
         add(new JLabel("Opération:"), gbc);
         gbc.gridx = 1;
-        String[] operations = {"+", "-", "*", "/", "%", "^", "√", "abs", "!", "log"};
-        operationBox = new JComboBox<>(operations);
+        operationBox = new JComboBox<>(new String[]{"+", "-", "*", "/", "%", "^", "√", "abs", "!", "log"});
         add(operationBox, gbc);
 
         // ===== Bouton Calculer =====
-        gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridx = 2;
         gbc.gridwidth = 2;
         calculateButton = new JButton("Calculer");
         add(calculateButton, gbc);
 
-        // ===== Label Résultat =====
+        // ===== Résultat =====
+        gbc.gridx = 0;
         gbc.gridy = 4;
+        gbc.gridwidth = 4;
         resultLabel = new JLabel("Résultat: ");
+        resultLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(resultLabel, gbc);
 
-        // ===== Historique des calculs =====
+        // ===== Historique =====
         gbc.gridy = 5;
-        gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         historyModel = new DefaultListModel<>();
         historyList = new JList<>(historyModel);
         JScrollPane scrollPane = new JScrollPane(historyList);
-        scrollPane.setPreferredSize(new Dimension(200, 150));
+        scrollPane.setPreferredSize(new Dimension(300, 150));
         add(scrollPane, gbc);
 
         pack();
         setLocationRelativeTo(null);
+        applyLightTheme();  // thème par défaut
+        applyFont("SansSerif"); // police par défaut
         setVisible(true);
     }
 
-    // ===== Méthode utilitaire pour ajouter une entrée à l'historique =====
-    /**
-     * Ajoute une ligne à l'historique des calculs.
-     * @param entry chaîne décrivant le calcul et son résultat
-     */
-    public void addHistoryEntry(String entry) {
-        historyModel.add(0, entry);
+    /** Applique le thème clair aux composants. */
+    private void applyLightTheme() {
+        Color bg = Color.WHITE;
+        Color fg = Color.BLACK;
+        getContentPane().setBackground(bg);
+        for (Component c : getContentPane().getComponents()) {
+            c.setBackground(bg);
+            c.setForeground(fg);
+            if (c instanceof JScrollPane) {
+                ((JScrollPane)c).getViewport().setBackground(bg);
+            }
+        }
+        historyList.setBackground(Color.LIGHT_GRAY);
     }
 
-    // ===== Getters pour accès aux composants =====
+    /** Applique le thème sombre aux composants. */
+    private void applyDarkTheme() {
+        Color bg = Color.DARK_GRAY;
+        Color fg = Color.WHITE;
+        getContentPane().setBackground(bg);
+        for (Component c : getContentPane().getComponents()) {
+            c.setBackground(bg);
+            c.setForeground(fg);
+            if (c instanceof JScrollPane) {
+                ((JScrollPane)c).getViewport().setBackground(bg);
+            }
+        }
+        historyList.setBackground(Color.GRAY);
+    }
+
+    /** Modifie la police de tous les composants. */
+    private void applyFont(String fontName) {
+        Font font = new Font(fontName, Font.PLAIN, 12);
+        for (Component c : getContentPane().getComponents()) {
+            c.setFont(font);
+        }
+        historyList.setFont(font);
+    }
+
+    /** Listener pour changer le thème selon la sélection. */
+    private class ThemeListener implements ItemListener {
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                String theme = (String) themeBox.getSelectedItem();
+                if ("Sombre".equals(theme)) {
+                    applyDarkTheme();
+                } else {
+                    applyLightTheme();
+                }
+                repaint();
+            }
+        }
+    }
+
+    /** Listener pour changer la police selon la sélection. */
+    private class FontListener implements ItemListener {
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                applyFont((String) fontBox.getSelectedItem());
+                repaint();
+            }
+        }
+    }
+
+    // Getters pour la logique de calcul (pas montrés ici)
     public JTextField getFieldA() { return fieldA; }
     public JTextField getFieldB() { return fieldB; }
     public JComboBox<String> getOperationBox() { return operationBox; }
     public JButton getCalculateButton() { return calculateButton; }
     public JLabel getResultLabel() { return resultLabel; }
+
+    /** Ajoute une ligne à l'historique. */
+    public void addHistoryEntry(String entry) {
+        historyModel.add(0, entry);
+    }
 }
