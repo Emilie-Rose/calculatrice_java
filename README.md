@@ -20,7 +20,7 @@
 
 ## 📸 Aperçu
 
-![Aperçu de l'application](docs\images\screenshot.png)
+![Aperçu de l'application](./docs/images/screenshot.png)
 
 ---
 
