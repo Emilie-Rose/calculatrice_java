@@ -20,7 +20,9 @@
 
 ## 📸 Aperçu
 
-![Aperçu de l'application](./docs/images/screenshot.png)
+<p align="center">
+  ![Aperçu de l'application](./docs/images/screenshot.png)
+</p>
 
 ---
 
