@@ -20,10 +20,11 @@
 
 ## 📸 Aperçu
 
+```html
 <p align="center">
-  ![Aperçu de l'application](./docs/images/screenshot.png)
+  <img src="./docs/images/screenshot.png" alt="Aperçu de l'application" />
 </p>
-
+```
 ---
 
 ## ⚙️ Prérequis
