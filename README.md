@@ -20,8 +20,24 @@
 
 ## 📸 Aperçu
 
-![Aperçu de l'application](path/to/screenshot.png)
-*Remplacez `path/to/screenshot.png` par l’emplacement réel de votre capture d’écran.*
+Pour inclure une capture d’écran de l’application :
+
+1. **Démarrez** l’application :
+   ```bash
+   java -cp out calculator.Main
+   ```
+2. **Prenez** la capture :
+   - **Windows**  : `Win + Shift + S`, puis collez dans un éditeur et enregistrez.
+   - **macOS**    : `Cmd + Shift + 4`, sélectionnez la zone, l’image se trouve sur le Bureau.
+   - **Linux**    : `PrtSc` ou `Shift + PrtSc` selon la distribution.
+3. **Enregistrez** la capture sous `docs/images/`, par exemple :
+   ```
+   docs/images/screenshot.png
+   ```
+4. **Mettez à jour** le chemin dans le README avec la syntaxe Markdown :
+   ```markdown
+   ![Aperçu de l'application](docs/images/screenshot.png)
+   ```
 
 ---
 
@@ -34,16 +50,19 @@
 
 ## 📂 Structure du projet
 
-```bash
-tree src
-```
+À la racine du projet (au même niveau que `src/`), créez un dossier `docs/` puis à l’intérieur, un sous-dossier `images/` pour y placer vos captures d’écran :
 
 ```
-src/
-├─ calculator/
-│  ├ CalculatorModel.java   # Logique des opérations
-│  ├ CalculatorUI.java      # Interface graphique (Swing)
-│  └ Main.java              # Point d'entrée
+<racine-projet>/
+├── src/
+│   └── calculator/
+│       ├ CalculatorModel.java
+│       ├ CalculatorUI.java
+│       └ Main.java
+├── docs/
+│   └── images/
+│       └── screenshot.png
+└── README.md
 ```
 
 ---
@@ -98,4 +117,6 @@ Les contributions sont bienvenues !
 **Emilie-Rose**  
 📅 Mise à jour : Juin 2025
 
+---
 
+© 2025 Emilie-Rose. Licence MIT.
