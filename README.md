@@ -1,67 +1,122 @@
-# Projet : Calculatrice Java
+# 🧮 Calculatrice Java Swing 🖥️
 
-Ce projet implémente une calculatrice de bureau en Java, utilisant Swing pour l'interface graphique et une classe modèle pour les opérations mathématiques.
+![Java 8+](https://img.shields.io/badge/Java-8%2B-red) ![Licence MIT](https://img.shields.io/badge/License-MIT-blue)
 
-## 🚀 Fonctionnalités
+> **Calculatrice de bureau** performante, écrite en Java avec Swing.
 
-* **Opérations de base** : addition, soustraction, multiplication, division, modulo
-* **Opérations avancées** : puissance, racine carrée, valeur absolue, logarithme base 10, factorielle
-* **Interface graphique** :
+---
 
-  * Champs de saisie pour deux nombres
-  * Menu déroulant pour sélectionner l’opération
-  * Bouton « Calculer » et affichage du résultat
-* **Gestion des erreurs** : validation des entrées, division par zéro, log de nombre négatif, factorielle d’entier négatif
+## ✨ Fonctionnalités
 
-## 📂 Structure du projet
+| Catégorie            | Opérations disponibles                                      |
+|----------------------|-------------------------------------------------------------|
+| **🔢 De base**       | `+`, `-`, `*`, `/`, `%`, `^`                                |
+| **🧮 Avancées**      | `√`, `abs`, `log₁₀`, `!`                                    |
+| **🕒 Historique**    | Liste des calculs, réinitialisation via bouton dédié        |
+| **🎨 Thèmes**        | Clair / Sombre (switch dynamique)                          |
+| **🔤 Polices**       | `SansSerif`, `Serif`, `Monospaced` (sélection dynamique)    |
 
-```
-src/
-└── calculator/
-    ├── CalculatorModel.java   // Modèle de calcul (toutes les méthodes)
-    ├── CalculatorUI.java      // Interface graphique Swing
-    └── Main.java              // Point d’entrée et liaison UI ↔ Modèle
-```
+---
+
+## 📸 Aperçu
+
+Pour inclure une capture d’écran de l’application :
+
+1. **Démarrez** l’application :
+   ```bash
+   java -cp out calculator.Main
+   ```
+2. **Prenez** la capture :
+   - **Windows**  : `Win + Shift + S`, puis collez dans un éditeur et enregistrez.
+   - **macOS**    : `Cmd + Shift + 4`, sélectionnez la zone, l’image se trouve sur le Bureau.
+   - **Linux**    : `PrtSc` ou `Shift + PrtSc` selon la distribution.
+3. **Enregistrez** la capture sous `docs/images/`, par exemple :
+   ```
+   docs/images/screenshot.png
+   ```
+4. **Mettez à jour** le chemin dans le README avec la syntaxe Markdown :
+   ```markdown
+   ![Aperçu de l'application](docs/images/screenshot.png)
+   ```
+
+---
 
 ## ⚙️ Prérequis
 
-* Java Development Kit (JDK) 8 ou supérieur
-* Un IDE (IntelliJ IDEA, Eclipse, VS Code...) ou la ligne de commande
+- **Java 8** ou supérieur
+- **Maven** (optionnel) ou tout autre outil de compilation Java
 
-## 🛠 Compilation et exécution
+---
 
-1. **Compiler**
+## 📂 Structure du projet
 
-   En ligne de commande depuis la racine du projet :
+À la racine du projet (au même niveau que `src/`), créez un dossier `docs/` puis à l’intérieur, un sous-dossier `images/` pour y placer vos captures d’écran :
 
-   ```bash
-   javac -d bin src/calculator/*.java
-   ```
+```
+<racine-projet>/
+├── src/
+│   └── calculator/
+│       ├ CalculatorModel.java
+│       ├ CalculatorUI.java
+│       └ Main.java
+├── docs/
+│   └── images/
+│       └── screenshot.png
+└── README.md
+```
 
-2. **Exécuter**
+---
 
-   Toujours depuis la racine du projet :
+## 🚀 Installation & Exécution
 
-   ```bash
-   java -cp bin calculator.Main
-   ```
+### 📦 Compilation (Ligne de commande)
 
-3. **Ou** ouvrir le projet dans votre IDE et lancer la méthode `main` de `calculator.Main`.
+```bash
+# Compiler
+javac -d out src/calculator/*.java
+# Exécuter
+java -cp out calculator.Main
+```
+
+### 🛠️ Avec Maven
+
+```bash
+# Assurez-vous d’avoir un pom.xml standard
+mvn compile exec:java -Dexec.mainClass="calculator.Main"
+```
+
+---
 
 ## 📝 Utilisation
 
-1. Saisir un ou deux nombres (selon l’opération) dans les champs « Nombre A » et « Nombre B ».
-2. Choisir l’opération dans la liste déroulante.
-3. Cliquer sur **Calculer**.
-4. Le résultat s’affiche sous le bouton.
+1. **Entrer** les opérandes dans les champs "Nombre A" et "Nombre B".
+2. **Sélectionner** l'opération dans le menu déroulant.
+3. **Cliquer** sur **Calculer** pour voir le résultat.
+4. **Historique**:
+   - S’affiche automatiquement sous le résultat.
+   - **Réinitialiser** via le bouton dédié.
+5. **Thèmes et polices**:
+   - Choisissez **Clair** ou **Sombre**.
+   - Sélectionnez la police souhaitée.
 
-## 🔧 Personnalisation et extensions possibles
-
-* Ajouter un historique des calculs (liste déroulante ou table).
-* Thèmes clair/sombre via `UIManager`.
-* Choix de la police et de la taille.
-* Refactorisation en pattern MVC plus strict.
-* Ajout d’opérations (sin, cos, tan, etc.)
 ---
 
-*Ce README évoluera au fur et à mesure de l’avancement du projet.*
+## 🤝 Contribuer
+
+Les contributions sont bienvenues !
+1. Forkez le dépôt
+2. Créez votre branche (`git checkout -b feature/ma-fonctionnalite`)
+3. Commitez vos modifications (`git commit -m 'Ajout de ...'`)
+4. Pushez (`git push origin feature/ma-fonctionnalite`)
+5. Ouvrez une Pull Request
+
+---
+
+## 🖊️ Auteur
+
+**Emilie-Rose**  
+📅 Mise à jour : Juin 2025
+
+---
+
+© 2025 Emilie-Rose. Licence MIT.

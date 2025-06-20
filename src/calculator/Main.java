@@ -9,67 +9,79 @@ import java.awt.event.ActionListener;
  * - Instancie le modèle (CalculatorModel)
  * - Instancie l'interface graphique (CalculatorUI)
  * - Lie le bouton "Calculer" à la logique du modèle
+ * - Ajoute chaque calcul à l'historique
  */
 public class Main {
     public static void main(String[] args) {
-        // S'assure que la création de l'UI se fait sur le thread Event Dispatch Thread
+        // Crée l'UI sur le Event Dispatch Thread
         SwingUtilities.invokeLater(() -> {
-            // Création du modèle de calcul
-            CalculatorModel model = new CalculatorModel();
-            // Création de l'interface utilisateur
-            CalculatorUI ui = new CalculatorUI();
+            CalculatorModel model = new CalculatorModel();  // Modèle de calcul
+            CalculatorUI ui = new CalculatorUI();          // Interface graphique
 
             // Ajout de l'écouteur sur le bouton "Calculer"
             ui.getCalculateButton().addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     try {
-                        // Lecture de l'opération choisie
                         String op = (String) ui.getOperationBox().getSelectedItem();
-                        // Lecture et conversion des valeurs saisies
                         double a = Double.parseDouble(ui.getFieldA().getText());
                         double b = 0;
-                        // Certaines opérations n'ont besoin que d'un seul opérande
-                        if (!op.equals("√") && !op.equals("!")) {
+                        boolean isBinary = !op.equals("√") && !op.equals("!");
+                        if (isBinary) {
                             b = Double.parseDouble(ui.getFieldB().getText());
                         }
 
-                        // Sélection de l'opération et appel au modèle
+                        // Calcul du résultat
+                        double result = 0;
+                        long longResult = 0;
+                        boolean isLongResult = false;
                         switch (op) {
-                            case "+":
-                                ui.getResultLabel().setText("Résultat: " + model.add(a, b));
-                                break;
-                            case "-":
-                                ui.getResultLabel().setText("Résultat: " + model.subtract(a, b));
-                                break;
-                            case "*":
-                                ui.getResultLabel().setText("Résultat: " + model.multiply(a, b));
-                                break;
-                            case "/":
-                                ui.getResultLabel().setText("Résultat: " + model.divide(a, b));
-                                break;
-                            case "%":
-                                ui.getResultLabel().setText("Résultat: " + model.modulo(a, b));
-                                break;
-                            case "^":
-                                ui.getResultLabel().setText("Résultat: " + model.power(a, b));
-                                break;
-                            case "√":
-                                ui.getResultLabel().setText("Résultat: " + model.sqrt(a));
-                                break;
-                            case "abs":
-                                ui.getResultLabel().setText("Résultat: " + model.abs(a));
-                                break;
-                            case "log":
-                                ui.getResultLabel().setText("Résultat: " + model.log(a));
-                                break;
-                            case "!":
-                                // Convertit en int pour factorial
-                                ui.getResultLabel().setText("Résultat: " + model.factorial((int) a));
+                            case "+": result = model.add(a, b); break;
+                            case "-": result = model.subtract(a, b); break;
+                            case "*": result = model.multiply(a, b); break;
+                            case "/": result = model.divide(a, b); break;
+                            case "%": result = model.modulo(a, b); break;
+                            case "^": result = model.power(a, b); break;
+                            case "√": result = model.sqrt(a); break;
+                            case "abs": result = model.abs(a); break;
+                            case "log": result = model.log(a); break;
+                            case "!": 
+                                longResult = model.factorial((int) a);
+                                isLongResult = true;
                                 break;
                             default:
-                                ui.getResultLabel().setText("Opération inconnue");
+                                throw new UnsupportedOperationException("Opération inconnue : " + op);
                         }
+
+                        // Formatage du résultat : supprime ".0" si le nombre est entier
+                        String resultStr;
+                        if (isLongResult) {
+                            resultStr = String.valueOf(longResult);
+                        } else {
+                            if (result == Math.floor(result)) {
+                                resultStr = String.valueOf((long) result);
+                            } else {
+                                resultStr = String.valueOf(result);
+                            }
+                        }
+                        ui.getResultLabel().setText("Résultat: " + resultStr);
+
+                        // Formatage des opérandes pour l'historique
+                        String aStr = (a == Math.floor(a)) ? String.valueOf((long) a) : String.valueOf(a);
+                        String bStr = (b == Math.floor(b)) ? String.valueOf((long) b) : String.valueOf(b);
+
+                        // Création de l'entrée d'historique
+                        String entry;
+                        if (isLongResult) {
+                            entry = op + "(" + aStr + ") = " + resultStr;
+                        } else if (!isBinary) {
+                            entry = op + "(" + aStr + ") = " + resultStr;
+                        } else {
+                            entry = aStr + " " + op + " " + bStr + " = " + resultStr;
+                        }
+                        // Ajout en tête de l'historique
+                        ui.addHistoryEntry(entry);
+
                     } catch (NumberFormatException ex) {
                         ui.getResultLabel().setText("Entrée invalide : veuillez saisir un nombre.");
                     } catch (Exception ex) {
