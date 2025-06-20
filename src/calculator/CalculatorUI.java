@@ -1,13 +1,16 @@
 package calculator;
 
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import javax.swing.*;
+import java.awt.event.ActionListener;
 
 /**
  * Interface graphique pour la calculatrice,
- * avec choix de thème (clair/sombre) et de police.
+ * avec choix de thème (clair/sombre), de police,
+ * historique des opérations et possibilité de le réinitialiser.
  */
 public class CalculatorUI extends JFrame {
     // Champs de saisie
@@ -20,6 +23,7 @@ public class CalculatorUI extends JFrame {
     // Historique
     private DefaultListModel<String> historyModel;
     private JList<String> historyList;
+    private JButton resetHistoryButton;
     // Contrôles de thème et de police
     private JComboBox<String> themeBox;
     private JComboBox<String> fontBox;
@@ -33,8 +37,7 @@ public class CalculatorUI extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // ===== Sélection du thème =====
-        gbc.gridx = 0;
-        gbc.gridy = 0;
+        gbc.gridx = 0; gbc.gridy = 0;
         add(new JLabel("Thème:"), gbc);
         gbc.gridx = 1;
         themeBox = new JComboBox<>(new String[]{"Clair", "Sombre"});
@@ -50,57 +53,57 @@ public class CalculatorUI extends JFrame {
         add(fontBox, gbc);
 
         // ===== Champ Nombre A =====
-        gbc.gridx = 0;
-        gbc.gridy = 1;
+        gbc.gridx = 0; gbc.gridy = 1; gbc.gridwidth = 1;
         add(new JLabel("Nombre A:"), gbc);
-        gbc.gridx = 1;
-        gbc.gridwidth = 3;
+        gbc.gridx = 1; gbc.gridwidth = 3;
         fieldA = new JTextField(10);
         add(fieldA, gbc);
 
         // ===== Champ Nombre B =====
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.gridwidth = 1;
+        gbc.gridx = 0; gbc.gridy = 2; gbc.gridwidth = 1;
         add(new JLabel("Nombre B:"), gbc);
-        gbc.gridx = 1;
-        gbc.gridwidth = 3;
+        gbc.gridx = 1; gbc.gridwidth = 3;
         fieldB = new JTextField(10);
         add(fieldB, gbc);
 
-        // ===== Opération =====
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.gridwidth = 1;
+        // ===== Choix Opération =====
+        gbc.gridx = 0; gbc.gridy = 3; gbc.gridwidth = 1;
         add(new JLabel("Opération:"), gbc);
         gbc.gridx = 1;
         operationBox = new JComboBox<>(new String[]{"+", "-", "*", "/", "%", "^", "√", "abs", "!", "log"});
         add(operationBox, gbc);
 
         // ===== Bouton Calculer =====
-        gbc.gridx = 2;
-        gbc.gridwidth = 2;
+        gbc.gridx = 2; gbc.gridwidth = 2;
         calculateButton = new JButton("Calculer");
         add(calculateButton, gbc);
 
         // ===== Résultat =====
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        gbc.gridwidth = 4;
-        resultLabel = new JLabel("Résultat: ");
-        resultLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        gbc.gridx = 0; gbc.gridy = 4; gbc.gridwidth = 4;
+        resultLabel = new JLabel("Résultat: ", SwingConstants.CENTER);
         add(resultLabel, gbc);
 
         // ===== Historique =====
-        gbc.gridy = 5;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
+        gbc.gridy = 5; gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 1.0; gbc.weighty = 1.0;
         historyModel = new DefaultListModel<>();
         historyList = new JList<>(historyModel);
         JScrollPane scrollPane = new JScrollPane(historyList);
         scrollPane.setPreferredSize(new Dimension(300, 150));
         add(scrollPane, gbc);
+
+        // ===== Bouton Réinitialiser l'historique =====
+        gbc.gridy = 6; gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weighty = 0;
+        resetHistoryButton = new JButton("Réinitialiser l'historique");
+        // Vide l'historique au clic
+        resetHistoryButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                historyModel.clear();
+            }
+        });
+        add(resetHistoryButton, gbc);
 
         pack();
         setLocationRelativeTo(null);
@@ -154,11 +157,7 @@ public class CalculatorUI extends JFrame {
         public void itemStateChanged(ItemEvent e) {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 String theme = (String) themeBox.getSelectedItem();
-                if ("Sombre".equals(theme)) {
-                    applyDarkTheme();
-                } else {
-                    applyLightTheme();
-                }
+                if ("Sombre".equals(theme)) applyDarkTheme(); else applyLightTheme();
                 repaint();
             }
         }
@@ -175,7 +174,7 @@ public class CalculatorUI extends JFrame {
         }
     }
 
-    // Getters pour la logique de calcul (pas montrés ici)
+    // Getters pour la logique de calcul
     public JTextField getFieldA() { return fieldA; }
     public JTextField getFieldB() { return fieldB; }
     public JComboBox<String> getOperationBox() { return operationBox; }
